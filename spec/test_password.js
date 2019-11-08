@@ -1,38 +1,49 @@
-let validate= require("../src");
+let validate= require("../src/password_checker");
 
 describe("passwordIsValid", function(){
     describe("validates the password", function(){
-        it("throws an error when password is an empty string", function () {
-            expect(validate.passwordIsValid("")).toBe("password should exist")
-        })
+        let pass = "sH3pel!nG";
+        let valid = validate.passwordIsValid(pass);
+
+        it("Should check if the password is not empty", () => {
+            expect(valid).not.toBeNull();
+        });
+
         it("throws an error when password length is less than 8", function(){
-            expect(validate.passwordIsValid("shepel")).toBe("password should be longer than than 8 characters")
+            expect(valid.length).toBeGreaterThan(8);
         })
 
         it("throws an error when the password has no lowercase character", function () {
-            expect(validate.passwordIsValid("SHEPELING")).toBe("password should have at least one lowercase letter")
+            expect(valid).toMatch(/[a-z]/);
         })
 
         it("throws an error when the password has no UPPERCASE character", function () {
-            expect(validate.passwordIsValid("shepeling")).toBe("password should have at least one uppercase letter")
+            expect(valid).toMatch(/[A-Z]/);
         })
 
         it("throws an error when the password has no digit", function () {
-            expect(validate.passwordIsValid("Shepeling")).toBe("password should have at least one digit")
+            expect(valid).toMatch(/[0-9]/);
         })
 
         it("throws an error when the password has no special character", function () {
-            expect(validate.passwordIsValid("Sh3p3ling")).toBe("password should have at least one special character")
+            expect(valid).toMatch(/[{(%$&*"'\|#@!)}]/);
         })
     })
 })
 
-describe("passwordIsOk", function(){
-    it("returns false if password does not match (cond1 and cond2) and At least one patt", function () {
-        expect(validate.passwordIsOk("shep")).toBe(false)
-    })
+describe("password is Ok", function(){
+    let password = "sH3pel!nG";
+    let valid = validate.passwordIsOk(password);
 
-    it("returns true if password match (cond1 and cond2) and At least one ptn", function () {
-        expect(validate.passwordIsOk("Sh3p3l:ng")).toBe(true)
+    let condition1 = /[a-z]/;
+    let condition2 = /[A-Z]/;
+    let condition3 = /[0-9]/;
+    let condition4 = /[{(%$&*"'\|#@!)}]/;
+
+    if ((password !== null) && (password.length < 8)){
+
+        it("should return password not okay if it doesn't meet condition1 and condition2", function () {
+        expect(valid).toMatch(condition1 || condition2 || condition3 || condition4);
     })
+    }
 })
